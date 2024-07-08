@@ -13,6 +13,18 @@ describe('sanitizeHtml', function() {
       allowedAttributes: false
     }), 'before &lt;img src="test.png" /&gt; after');
   });
+  it('should preserve all attributes in escaped tags', () => {
+    assert.equal(sanitizeHtml('before <img src="test.png" foo="bar baz boo" style="color: red" /> after', {
+      disallowedTagsMode: 'escape',
+      allowedTags: []
+    }), 'before &lt;img src="test.png" foo="bar baz boo" style="color: red" /&gt; after');
+  });
+  it('should preserve all attributes in unrecognised escaped tags', () => {
+    assert.equal(sanitizeHtml('before <vimg src="test.png" foo="bar baz boo" style="color: red" /> after', {
+      disallowedTagsMode: 'escape',
+      allowedTags: []
+    }), 'before &lt;vimg src="test.png" foo="bar baz boo" style="color: red"&gt; after');
+  });
   it('should handle numbers as strings', () => {
     assert.equal(sanitizeHtml(5, {
       allowedTags: [ 'b', 'em', 'i', 's', 'small', 'strong', 'sub', 'sup', 'time', 'u' ],

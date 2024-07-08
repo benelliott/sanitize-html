@@ -287,8 +287,17 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
+      const willEscape = skip;
+
+      if (willEscape || !allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
+          if (willEscape) {
+            result += ' ' + a;
+            value = value || '';
+            result += '="' + escapeHtml(value, true) + '"';
+            return;
+          }
+
           if (!VALID_HTML_ATTRIBUTE_NAME.test(a)) {
             // This prevents part of an attribute name in the output from being
             // interpreted as the end of an attribute, or end of a tag.
